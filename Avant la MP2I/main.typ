@@ -1,6 +1,6 @@
 #import "template.typ": *
 #import "tablex.typ" : *
-#document(title: "Avant la MP2I - Informatique")[
+#document(title: "Avant la MP2I - Informatique (2024)")[
 
 #imp[Licence]  Avant La MP2I is licensed under CC BY-NC-SA 4.0 
   
@@ -22,14 +22,24 @@
 + Tableaux ou listes ?
 + Représentation des réels
 + Raisonner inductivement
++ Retour sur trace
 + Introduction aux graphes
 + Travailler avec des mots
 + Comment débuguer
 + Exercices sans thème précis
++ Corrections de certains exercices
 
 #imp[Gardez ce polycopié à jour] en téléchargeant régulièrement la dernière version sur le site https://avantlampii.cr-dev.io/ ou directement depuis le github (https://github.com/crdevio/Livres)
 
 #imp[Contribuez] vous pouvez utiliser le repo GitHub pour proposer vos Pull Requests (exercices, corrections, typos, etc).
+
+#imp[Nouveautés de la version 2024]
+- Ajouter de certaines corrections 
+- Ajout d'exercices
+- Plus de margin-notes pour centrer le texte
+- Ajout du cours sur le retour sur trace
+- Changements mineurs de style
+
 = Qu'est-ce qu'un algorithme ?
 == Définition
 Vous avez sans doute souvent entendu parler d'algorithme, que ce soit en NSI ou lors de vos cours de mathématiques au lycée, mais qu'est-ce que c'est exactement ? On serait tenté de dire qu'un programme Python est un algorithme... Mais non ! Ce serait plutôt une implémentation d'un algorithme. Pour le comprendre, voici la définition formelle d'un algorithme :
@@ -157,7 +167,6 @@ Algo1:
         Pour j allant de i à (n-1)
             faire_truc(i,j)
 ```
-#margin-note[Une matrice est symétrique si $M[i,j] = M[j,i]$]
 ```
 Algo2:
     Entrée : une matrice de taille n*n symétrique
@@ -282,7 +291,7 @@ def fact(n): #on suppose n>=0
         res*= i
     return res
 ```
-mais elle est plus simple à lire. La récursivité n'est évidemment pas qu'une simplification du code et a d'autres intérêts, mais pour commencer il est bien de comprendre qu'une fonction récursive peut en partie servir à avoir un code plus lisible. #margin-note[Dans la section sur les raisonnements inductifs, la récursivité prendra tout son sens]
+mais elle est plus simple à lire. La récursivité n'est évidemment pas qu'une simplification du code et a d'autres intérêts, mais pour commencer il est bien de comprendre qu'une fonction récursive peut en partie servir à avoir un code plus lisible.
 
 #exo_nd(title: "Une première mise sous forme récursive")[
     Soit la fonction suivante :
@@ -380,7 +389,6 @@ f(2) dépilé
 
 === Temporelle
 Je ne vais pas rentrer dans les détails pour la complexité des fonctions récursives, vous le verrez dans le début de votre première année, le but ici est simplement de vous faire comprendre, avec les mains, quel algorithme sera infaisable et lequel sera faisable.
-#margin-note[les opérations élémentaires sont considérés $O(1)$ pour des valeurs de $n$ raisonnables dans l'analyse de complexité]
 Si vous avez fait l'exercice 2-5, vous avez remarqué que pour une valeur de `n` assez faible, le programme devient impossible à lancer, mais pourquoi ? Si on note `C(n)` la complexité pour un appel avec la taille `n`, on peut voir la relation de récurrence suivante : `C(n) = C(n-1) + C(n-2) + 1` (le 1 est à peu près le coût de l'addition en tant qu'opération élémentaire). Ainsi, on peut voir que la fonction va calculer plein de fois les mêmes valeurs, sans rentrer dans les détails de la résolution, on trouve que la complexité vaut $C(n) = phi^n$ avec $phi$ un nombre $> 1$, ainsi la complexité $C(n)$ va exploser, ce qu'on appelle une complexité #imp[exponentielle]. 
 
 À l'inverse, si on considère la fonction `fact`, on a une formule de la forme `C(n) = C(n-1) +1` et la, vous connaissez ! Si on réécrit ceci $u_n = u_(n-1) +1$ c'est une suite arithmétique, on trouve trivialement que $u_n = n$ donc $C(n) = n$, c'est une complexité linéaire donc tout à fait acceptable.
@@ -537,7 +545,7 @@ def fibo(n):
 ]
 
 
-#margin-note[C'est bien une liste et non un tableau, regardez le chapitre à ce sujet si vous avez un doute.]
+
 #exo_nd(title: "Jeu d'élimination", etoile: 2)[
   On vous donne une #imp[liste] qui contient $[|1;n|]$
 
@@ -859,7 +867,7 @@ Ainsi, on peut dire que `[1;2;3]` est `1::(2::(3::(Vide)))`. Le gros avantage de
 ]
 
 
-#margin-note[Ce théorème n'a pas de nom officiel, simplement cette démonstration permet de saisir le raisonnement inductif]
+
 #th(title: "Raisonnement inductif")[
     Si une propriété est vraie pour les cas de base et qu'elle est préservée par l'application d'un constructeur, alors elle est vraie pour tout élément du type considéré.
 ]
@@ -880,7 +888,7 @@ Ainsi on peut voir que savoir que la propriété tient pour les cas de base et q
 
 #exo_nd(title: "Encore et encore")[
     Refaîtes la démonstration du théorème #imp[4-1] pour voir si vous l'avez bien comprise.
-] #margin-note[En prépa, surtout en maths, vous aurez pas mal de démonstrations à savoir refaire, il ne faut surtout pas les apprendre par coeur mais en comprendre les idées essentielles et la structure]
+]
 
 
 == Les arbres
@@ -980,7 +988,6 @@ def hauteur(a):
 ]
 
 #exo_nd(title: "Parchemin, le retour")[
-    #margin-note[Raisonner par induction, on peut considérer que `a:NULL` est le cas de base.]
 On considère le type parchemin définie dans l'exercice Palindrome du chapitre 2.
 
 Montrez que n'importe quel mot peut être encodé par ce type.
@@ -1230,6 +1237,108 @@ Etant donné deux mots $u$ et $v$, donnez la distance d'édition entre $u$ et $v
   Etant donné un entier $n$ et un tableau correspondant, combien de case d'eau peut-on emprisonner ? (Imaginez qu'il pleut, combien de cases peuvent contenir de l'eau en ayant un mur à gauche et à droite)
 ]
 
+= Retour sur trace $star$
+
+#rem[Cette section est en cours d'écriture / relecture, elle n'est pas terminée.]
+
+==  Forcebrute
+Jusqu'à présent on considérait des problèmes dans lesquels on pouvait trouver la réponse avec quelques parcours sans pouvoir se tromper, par exemple pour calculer la hauteur d'un arbre il faut parcourir l'arbre mais on est sûrs qu'un parcours va suffire. Si désormais je vous donne un PC avec un mot-de-passe et que je vous demande de le dévérouiller, vous ne pouvez pas en un parcours (en un mot de passe) être sûr de trouver le bon (ou alors vous êtes un oracle), il parait donc compliquer de donner un algorithme "intelligent" pour le faire. C'est justement le but de la force brute:
+
+#def(title: "Bruteforce")[
+  Un algorithme bruteforce est un algorithme qui, étant donné un problème et un ensemble possible de solutions, essaye toutes les solutions jusqu'à en trouver une ou toutes dans le domaine voulu.
+]
+
+Par exemple si vous savez que le mot-de-passe est de taille 12, vous allez générer tous les mots de passe possibles de 12 caractères jusqu'à trouver le bon.
+
+#exo_nd(title: "Bruteforce",etoile:1)[
+  1. Ecrire un algorithme python qui prend en entrée un mot de taille 8 et qui essaye tous les mots de taille 8 jusqu'à trouver celui passé en entrée
+  2. Ecrire un algorithme python qui prend en entrée un mot de taille $<= 8$ et qui essaye tous les mots nécessaires jusqu'à trouver celui passé en entrée (on n'utilisera pas `len` sur l'entrée).
+]
+
+== Retour sur trace
+
+Pour certains problèmes, tester #imp[toutes] les solutions est une perte de temps, par exemple si on prend une grille de sudoku déjà remplie et qu'il nous reste les cases $c_1,...,c_k$ à remplir, l'algorithme bruteforce va tester toutes les valeurs de $[|1;9|]$ dans chaque $c_i$ (ça fait beaucoup de possibilités). Pourtant si on a déjà remplies $c_1,...,c_(p < k)$ et que la solution actuelle a deux lignes (ou colonnes, ou carrés) qui ont la même valeur, toutes les solutions $c_1,...,c_p,...,c_k$ seront fausses. On a donc envie de #imp[s'arrêter dès qu'on a fait une erreur].
+
+#def(title: "Retour sur trace")[
+  On considére la solution vide (qui est valide si l'entrée l'est, si elle ne l'est pas le problème n'a pas de solution). Ensuite, pour chaque position on essaye toutes les valeurs possibles et dès qu'on arrive à une solution partielle fausse (fausse selon une fonction qu'on se donne en entrée qui vérifie qu'une solution partielle reste une solution partielle si on modifie $c$ pour la valeur $v$) on #imp[passe à la valeur suivante pour la case actuelle si possible, et sinon on renvoie faux].
+]
+
+Faisons un exemple concret: On va écrire un algorithme qui créé des couples de personnes selon des contraintes (soit $A$ et $B$ veulent absolument être ensemble, soit ils s'en moquent, soit ils ne veulent pas du tout être ensemble).
+
+Entrée: ```(Alice veut être avec Bob), (Bob veut être avec Alice), (Charlie ne veut pas être avec Bob), (Charlie se moque de Eve), (Eve se moque de Charlie)```
+
+Algorithme à la main:
+```
+- Alice
+  - Coupleé avec Alice
+    - Impossible car on ne peut pas lier une personne à elle-même
+  - Couplée avec Bob
+    - Respecte les contraintes, on continue
+    - Bob est déjà couplé avec Alice donc on génère pour la personne suivante
+      - Charlie est couplé avec Alice
+        - Impossible car Alice est déjà couplé
+      - Charlie est couplé avec Bob
+        - Impossible car Bob est déjà couplé
+      - Charlie est couplé avec Charlie
+        - Impossible car on ne peut pas lié une personne à elle-même
+      - Charlie est couplé avec Eve
+        - Ok
+        - Eve est déjà couplé donc c'est bon
+```
+Dans cet exemple on a réussi, montrons un exemple qui se passe moins bien, avec 2 personnes:
+Entrée: ```(Alice veut être avec Bob),(Bob ne veut pas être Alice)```
+Algorithme à la main:
+```
+- Alice couplée avec Alice
+  - Impossible car on ne peut pas lier une personne à elle-même
+  - Alice couplée avec Bob
+    - Impossible car Bob ne veut pas d'Alice
+  - Il n'y a plus de possibilités, Alice ne peut pas être couplé
+- On n'a plus personne à modifier: c'est perdu.
+```
+
+Donnons un dernier exemple, qui cette fois-ci réussie mais après un essai infrucuteux. Vous #imp[noterez bien l'effacement des choix à chaque erreur]
+Entrée: ```(A moque B), (B moque A), (C veut A), (D se moque de tout le monde)```
+Algorithme à la main:
+```
+- A couplée avec A
+  - Impossible
+- A couplée avec B
+  - B déjà couplé
+  - C couplé avec A
+    - Impossible car A déjà couplé
+  - C couplé avec B
+    - Impossible car B déjà couplé
+  - C couplé avec C
+    - Impossible
+  - C couplé avec D
+    - Impossible car C veut A
+  - Plus de solution possible, renvoie faux
+- A n'est plus couplé à B. A couplé à C
+  - B couplé avec A
+    - Impossible car A déjà couplé
+  - B couplé avec B
+    - Impossible
+  - B couplé avec C
+    - Impossible car C déjà couplé
+  - B couplé avec D
+     - C déjà couplé
+     - D déjà couplé
+     - Solution trouvée
+```
+
+Il faut faire attention à quelques points:
+- Il faut bien faire reculer la solution partielle de 1 quand on a une erreur. Dans notre exemple des couples, si A est couplée à B et qu'on veut coupler A à C, il faut penser à découpler B de à A.
+- Quand on renvoie faux ce n'est pas la fin, sauf si c'est le premier choix qui renvoie faux. De manière générale, `faux` = retour en arrière de 1.
+- La fonction de test de solutions partielles est souvent le point le plus compliqué.
+
+== Exercices de fin de partie
+Les exercices sont durs et cette notion sera intégralement revue en MP2I donc je vous mets qu'un seul exercice, à traiter seulement si le cours vous en dit.
+
+#exo_nd(title: "Sudoku", etoile: 3)[
+  1. Reprendre l'exercice "Sudoku, première rencontre"
+  2. On va vouloir résoudre le sudoku par retour sur trace avec pour fonction de vérification la fonction qui vous dit si la grille viole une règle du sudoku. L'idée est de se donner un ordre arbitraire sur les cases et de combler les trous 1 à 1 avec toutes les valeurs possibles (de 0 à 9). Coder cet algorithme en python.
+]
 = Introduction aux graphes
 
 Les graphes font partie des points-clés du programme de MP2I et MPI, vous reprendrez de 0 en cours, mais il peut-être avantageux d'avoir déjà quelques notions en tête pour gagner du temps.
@@ -1503,7 +1612,6 @@ Puisque vous repartirez de zéro sur les graphes orientés en prépa, je vous pr
 == Définitions
 
 On se donne un alphabet, noté $Sigma$ usuellement. Par exemple, en binaire on a $Sigma = \{ 0;1\}$, sur notre ordinateur on a $Sigma = $ la table ascii, et pour mon chien on a $Sigma = \{W,O,U,F\}$. Si vous voulez une définition "formelle":
-#margin-note[C'est la même définition que celle donnée par le philosophe F. Saussure d'un langage au sens littéraire !]
 #def(title: "Alphabet")[
   Un alphabet $Sigma$ est un ensemble #imp[fini] de symboles (appellés lettres)
 ]
@@ -1903,6 +2011,168 @@ Des exercices plus compliqué sont à venir.
   Etant donné un mot (une chaîne de caractères), afficher toutes les permutations de ce mot (attention, pour le mot `bob`, `bob` doit être affiché deux fois).
 
   #rem[(Indication) Commencer par générer les permutations de $[|1;n|]$]
+]
+
+= Corrections
+
+== Chapitre 1
+#corr(num:"1-1")[Garder en mémoire le maximum qui vaut intialement le premier élément. A chaque élément du tableau, le comparer au maximum en mémoire.]
+
+#corr(num:"1-2")[
+  1. Toujours garder en mémoire l'élément précédent (au début le premier élément) et pour chaque élément, vérifier qu'il est $>=$ à celui en mémoire, puis le mettre en mémoire.
+  2. Faire de même avec $<=$ et $=$ et vérifier l'un des 3]
+
+#corr(num:"1-3")[Lui ajouter un paramètre qu'on décroît de 1 à chaque fois, si il est nul alors on renvoie faux. Si l'algorithme termine avant on renvoie vrai]
+
+#corr(num:"1-6")[$O(|L|)$  ! Le 100000 est une constante]
+
+#corr(num:"1-12")[1. $10^4$ 2. $(26*2)^14$ 3. On peut diviser par $26*2$]
+
+#corr(num:"1-13")[
+  On fait un XOR. Ou si vous ne connaissez pas le XOR, on met 1 en mémoire, puis pour tout élément, si l'élément divise le nombre en mémoire on divise, sinon on multiplie par cet élément.
+]
+
+== Chapitre 2 
+
+#corr(num:"2-1")[
+  1. Elle calcule le produit des nombres pairs entre $2$ et $n$
+  2. ```python
+  def fact_pair(n):
+
+    if n==0: return 1
+    if n%2==1: return fact_pair(n-1)
+    return n * fact(n-2)
+  ```
+  3. On peut faire `fact(n)/mystere2(n)`
+  4. $O(n)$
+]
+
+#corr(num:"2-3")[
+  1. ```python
+  def fib(n):
+  if n<=1: return n
+  return fib(n-1)+fib(n-2)
+  ```
+  2. Ce sont les cas $n <= 1$. On le voit car il n'y a plus d'appel récursif.
+  3. $n$ décroît strictement à chaque appel, ce qui garantit la terminaison.
+]
+
+#corr(num:"2-6")[
+  1. On créé un tableau de taillt `n` et pour chaque `fib(k)`, si la case $k$ a déjà été remplie on renvoit sa valeur, sinon on calcule `fib(k)` avec `fib(k-1)` et `fib(k-2)` et on ajoute la valeur dans le tableau. Comme ça on calcule une seule fois chaque valeur de fibonacci et on a une complexité linéaire.
+  2. L'idée est de faire `fib` qui renvoie le couple $(u_(n-1),u_n)$. Je vous laisse chercher avec cette indication.
+]
+
+#corr(num:"2-7")[
+  1. $O(n)$
+  2. ça ne termine pas, on ne parle pas de complexité.
+  3. $O(max(t a b))$
+  4. $O(1)$
+  5. $O(n)$
+]
+
+#corr(num:"2-12")[
+  ```python
+  def rebours_aux2(n):
+    print(n)
+    if n!=1: rebours_aux2(n-1)
+
+  def rebours_aux1(k,n):
+    print(k)
+    if k==n:  
+      rebours_aux2(n)
+    else:
+      rebours_aux1(k+1)
+    
+  def infinite(n):
+    while True:
+      rebours_aux1(0,n)  
+  ```
+]
+
+#corr(num:"2-14")[Obtenir par appel récursif les permutations de $[|1;n-1|]$ puis ajouter $n$ à toutes les positions dans toutes les permutations.]
+
+== Chapitre 3
+#corr(num:"3-1")[
+  1. Les tableaux sont optimaux car accès $O(1)$ et on connaît déjà la taille au début.
+  2. De même car on peut borner la taille et que c'est pas trop grand, donc un tableau est suffisant.
+  3. Les deux sont possibles, si c'est un très gros site c'est un peu compliqué de borner donc préférer des listes (mais en pratique ce sera une base de donnée)
+  4. Je sais pas pourquoi j'ai mis cette question, surtout que les deux sont utiles.
+  5. On peut borner la taille et c'est acceptable donc tableau.
+]
+
+#corr(num:"3-3")[Accès $O(1)$]
+
+#corr(num:"3-4")[
+  ```
+  def maxi(a,b):
+    if a>=b: 
+      return a
+    return b
+  def max(l):
+    if un_seul_element(l): return seul_element(l)
+    if vide(l): ERREUR
+    return maxi(element_act(l),max(suite(l)))
+  ```
+]
+
+== Chapitre 4
+== Chapitre 5
+#corr(num:"5-1")[
+  Cas de base: Liste vide. Constructeur: $::$
+]
+
+#corr(num:"5-2")[
+  Cas de base: Arbre vide, Feuille. Constructeur: Noeud
+]
+
+#corr(num:"5-4")[
+  1. $h+1 <= n <= 2^(h+1) - 1 $. Pour cela considérer le pire cas et le meilleur cas (que 1 fils / que 2 fils)
+  2. ça sera fait en prépa.
+]
+
+#corr(num:"5-11")[
+  J'ai dérapé, ne pas traiter.
+]
+
+== Chapitre 6
+
+#corr(num:"6-1")[
+  On fait deux cas: Celui dans lequel on prend l'objet et celui dans lequel on ne le prend pas. Et on fait un appel récursif dessus (toujours en considérant l'objet $k$, pour permettre de le prendre plusieurs fois. De toute façon vu qu'on a une limite de poids on ne va jamais tourner à l'infini tant que l'objet n'a pas de poids 0 et si il a un poids 0 il n'y a pas de solutions car la solution c'est $infinity$)
+]
+
+== Chapitre 7
+
+== Chapitre 8
+
+#corr(num:"8-1")[
+  Si un chemin de $u$ à $v$ passe deux fois par une même arête, on peut simplement retirer tous qu'il fait enter les deux passages dans l'arête et on aura toujours un chemin de $u$ à $v$
+]
+
+#corr(num:"8-2")[
+  `7,8` et `6,5,4,1,2,3`
+]
+
+#corr(num:"8-3")[
+  Non ! Un cycle est un chemin #imp[simple] et la l'arête $\{i,j\}$ est utilisée deux fois.
+]
+
+#corr(num:"8-4")[
+  $(5,4,1,2,3)$ (ou tout cycle équivalent)
+]
+
+#corr(num:"8-5")[Todo, elle est importante celle-là]
+
+#corr(num:"8-9")[
+  Oui ! Car l'arête $(i,j)$ est cette-fois différente de celle $(j,i)$ (différence ensemble / couple, au programme de terminale et première)
+]
+
+== Chapitre 9
+== Chapitre 10
+#corr(num:"10-1")[
+  L'erreur à débuguer est le fait que ce soit `tab[j][i]`, je laisse Coin-Coin vous expliquer pourquoi.
+]
+#corr(num:"10-2")[
+  L'erreur à débuguer est l'oubli de cas de basen je laisse Coin-Coin vous expliquer pourquoi.
 ]
 = Crédits
 

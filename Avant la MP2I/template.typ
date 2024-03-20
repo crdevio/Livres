@@ -11,7 +11,7 @@
 #let equiv =  sym.equiv
 
 // Size of the left "margin" (note area)
-#let margin-size = 15%
+#let margin-size = 0%
 // Spacer so that main content and notes don't rub up against each other
 #let margin-space = 0.1in
 #let imp(cont) ={
@@ -510,6 +510,9 @@
   )
 }
 
+#let corr(desc,num:"nd") = {
+  [#imp(num): #desc]
+}
 #let exo(
     description,
     title: none,
@@ -592,6 +595,7 @@
   text(tot_exos.display("1"))
 }
 
+
 #let document(
     title: none,
     doc
@@ -602,7 +606,7 @@
     ): it => block(width: 100%)[
     #reset_cpt()
     #cpt_part.step()
-    #set align(left)
+    #set align(center)
     #set text(1.1em, weight: "regular")
     #imp(counter(heading).display()) #underline(smallcaps(it.body))
     ]
@@ -612,20 +616,20 @@
     ): it => block(width: 100%)[
     #set align(left)
     #set text(1.1em, weight: "regular")
-    #imp(counter(heading).display()) #smallcaps(it.body))
+    #imp(counter(heading).display()) #smallcaps(it.body)
     ]
     show heading.where(
     level: 3
     ): it => block(width: 100%)[
     #set align(left)
     #set text(1.1em, weight: "regular")
-    #imp(counter(heading).display()) #smallcaps(it.body))
+    #imp(counter(heading).display()) #smallcaps(it.body)
     ]
     show heading.where(
     level: 4
     ): it => block(width: 100%)[
     #set align(left)
-    #set text(1em, weight: "regular")
+    #set text(1.1em, weight: "regular")
     #imp(counter(heading).display()) #smallcaps(it.body)
     ]
     set page(
@@ -639,10 +643,7 @@
     text(2em,smallcaps(title))
     set align(left)
     set par(justify: true)
-    grid(
-      columns:(100%-margin-size, margin-size),
-      doc,
-    )
+    doc
     
     
 
